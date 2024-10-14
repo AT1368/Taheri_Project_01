@@ -1,0 +1,75 @@
+---
+title: "Reports"
+author: "Asma taheri"
+date: '2024-10-08'
+output: html_document
+---
+```{r}
+library(ggplot2)
+library(knitr)
+library(readxl)
+library(dplyr)
+library(table1)
+
+```
+
+
+```{r}
+# read data:
+df <- read.csv("C:\\Users\\esthe\\Downloads\\lead-iq-01.csv")
+summary(df)
+```
+
+```{r}
+#plot:
+ggplot(df, aes(x = Smelter, y = IQ)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "lightblue", color = "black") +
+  labs(title = "Average IQ by Location Status",
+       x = "Location Status (Smelter)", 
+       y = "Average IQ") +
+  theme_minimal()
+```
+# Here is a descriptive summary table that has the value for IQ level,
+# stratify by distance( smelter column).
+
+
+```{r}
+# Table:
+
+#summary table:
+
+
+caption  <- "Descriptive Statistics"
+table<- table1(~ IQ| Smelter,
+
+       data = df, overall=c(right="Total"), caption=caption)
+
+print(table)
+
+```
+```{r}
+
+# Cleaning data:
+# IQ range is 40-160, 999 must be typo:
+df$IQ[df$IQ == 999] <- 99
+
+```
+
+
+
+```{r}
+
+# Calculate the mean IQ, after data cleaning:
+mean_IQ <- mean(df$IQ, na.rm = TRUE)  
+
+# Display the mean in-line
+cat(sprintf("Mean IQ: %.2f\n", mean_IQ))
+caption  <- "Descriptive Statistics"
+table<- table1(~ IQ| Smelter,
+
+       data = df, overall=c(right="Total"), caption=caption)
+
+print(table)
+
+```
+
